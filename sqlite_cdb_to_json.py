@@ -29,7 +29,7 @@ def change_db_to_json(rows):
             "card_name": row[13],
             "card_id": str(row[0]),
             "card_country": card_country( row[11], "country"),
-            "card_bloc": card_country( row[11], "bloc"),
+            "card_bloc": card_country( row[1], "bloc"),
             "card_type": card_type( row[4] ),
             "card_setcard": card_setcard( row[3], row[0]),
             "card_level": (card_level_and_strike( row[7], "level")),
@@ -45,22 +45,21 @@ def change_db_to_json(rows):
     return data
     
 def card_country(country_number, position):
+    if (position == "bloc"):
+        if (country_number > 0): return str(country_number)
+        return '-'
+
     number = str(hex(country_number)).removeprefix('0x')
-    
+
     while (len(number) % 4 > 0):
         number = '0' + number
-    
-    if (position == "bloc"):
-        if (int(number[0], 16) > 0): return str(int(number[0], 16))
-        return '-'
         
     result = []
     country_table = [0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800]
-    country_table_str = ['2', '4', '8', '10', '20', '40', '80', '100', '200', '400', '800']
     
     for i in range(len(country_table)):
         if (country_number & country_table[i] > 0):
-            result.append(country_table_str[i])
+            result.append(str(hex(country_table[i])).removeprefix('0x'))
             
     if (len(result) == 0):
          return ['-']
@@ -70,11 +69,10 @@ def card_country(country_number, position):
 def card_type(type_number):
     result = []
     type_table = [0x1, 0x2, 0x4, 0x20, 0x40, 0x80, 0x200, 0x4000, 0x10000, 0x20000, 0x100000]
-    type_table_str = ['1', '2', '4', '20', '40', '80', '200', '4000', '10000', '20000', '100000']
     
     for i in range(len(type_table)):
         if (type_number & type_table[i] > 0):
-            result.append(type_table_str[i])
+            result.append(str(hex(type_table[i])).removeprefix('0x'))
             
     if (len(result) == 0):
          return ['-']
@@ -135,10 +133,9 @@ def card_level_and_strike(l_a_s_number, position):
 def card_skill(skill_number):
     result = []
     skill_table = [0x2, 0x4, 0x8, 0x10, 0x20, 0x40]
-    skill_table_str = ['2', '4', '8', '10', '20', '40']
     
     for i in range(len(skill_table)):
-        if (skill_number & skill_table[i] > 0): result.append(skill_table_str[i])
+        if (skill_number & skill_table[i] > 0): result.append(str(hex(skill_table[i])).removeprefix('0x'))
         
     if (len(result) == 0):
          return ['-']
