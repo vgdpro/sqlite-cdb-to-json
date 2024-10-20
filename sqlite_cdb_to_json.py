@@ -4,22 +4,22 @@ import json
 from unittest import result
 
 def sql():
-    # Á¬½Óµ½SQLiteÊı¾İ¿â
+    # è¿æ¥åˆ°SQLiteæ•°æ®åº“
     conn = sqlite3.connect('./cdb/cards.cdb')
     cursor = conn.cursor()
 
-    # Ö´ĞĞSQL²éÑ¯
+    # æ‰§è¡ŒSQLæŸ¥è¯¢
     cursor.execute("select * from datas,texts where datas.id=texts.id")
-    rows = cursor.fetchall()  # »ñÈ¡ËùÓĞĞĞÊı¾İ
+    rows = cursor.fetchall()  # è·å–æ‰€æœ‰è¡Œæ•°æ®
 
-    # ´¦ÀíÊı¾İ²¢×ª»»ÎªJSON
+    # å¤„ç†æ•°æ®å¹¶è½¬æ¢ä¸ºJSON
     data = change_db_to_json(rows)
 
-    # ×ª»»ÎªJSON¸ñÊ½²¢Ğ´ÈëÎÄ¼ş
+    # è½¬æ¢ä¸ºJSONæ ¼å¼å¹¶å†™å…¥æ–‡ä»¶
     with open('output.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-    # ¹Ø±ÕÊı¾İ¿âÁ¬½Ó
+    # å…³é—­æ•°æ®åº“è¿æ¥
     conn.close()
 
 def change_db_to_json(rows):
